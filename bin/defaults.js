@@ -3,13 +3,10 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.mergeOptions = mergeOptions;
 exports.defaults = void 0;
-
+exports.mergeOptions = mergeOptions;
 var _objectAssign = _interopRequireDefault(require("object-assign"));
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
 var defaults = {
   wrapperId: 'notification-wrapper',
   animationDuration: 300,
@@ -37,7 +34,6 @@ var defaults = {
   }
 };
 exports.defaults = defaults;
-
 function mergeOptions(options) {
   exports.defaults = defaults = (0, _objectAssign["default"])(defaults, options);
 }

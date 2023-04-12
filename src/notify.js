@@ -1,21 +1,26 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import Toast from './components/Toast';
-import Container from './components/Container';
-import {defaults} from './defaults';
+import React from "react";
+import * as ReactDOMClient from "react-dom/client";
+import Toast from "./components/Toast";
+import Container from "./components/Container";
+import { defaults } from "./defaults";
+
+let root;
 
 /* Render React component */
 function renderToast(text, type, timeout, color) {
     let target = document.getElementById(defaults.wrapperId);
-    ReactDOM.render(<Toast text={text} timeout={timeout} type={type} color={color}/>, target);
+    root = ReactDOMClient.createRoot(target);
+    root.render(
+        <Toast text={text} timeout={timeout} type={type} color={color} />
+    );
 }
 
 /* Unmount React component */
 function hide() {
-    let target = document.getElementById(defaults.wrapperId);
-    ReactDOM.unmountComponentAtNode(target);
+    if (root) {
+        root.unmount();
+    }
 }
-
 
 /**
  * Show Animated Toast Message
@@ -44,7 +49,7 @@ function show(text, type, timeout, color) {
         }
 
         // Unmount react component after the animation finished.
-        setTimeout(function() {
+        setTimeout(function () {
             hide();
         }, renderTimeout + defaults.animationDuration);
 
@@ -90,7 +95,10 @@ function createShowQueue(initialRecallDelay = 500, recallDelayIncrement = 500) {
         if (show(current.text, current.type, current.timeout, current.color)) {
             this.currentRecallDelay = initialRecallDelay;
             if (current.timeout > 0) {
-                setTimeout(() => this.showNotify(), current.timeout + defaults.animationDuration);
+                setTimeout(
+                    () => this.showNotify(),
+                    current.timeout + defaults.animationDuration
+                );
             }
         } else {
             // If message show failed, re-add the current message to the front of the queue
@@ -100,8 +108,8 @@ function createShowQueue(initialRecallDelay = 500, recallDelayIncrement = 500) {
         }
     };
 
-    return (text, type = '', timeout = defaults.timeout, color) => {
-        this.msgs.push({text, type, timeout, color});
+    return (text, type = "", timeout = defaults.timeout, color) => {
+        this.msgs.push({ text, type, timeout, color });
         if (!this.isNotifying) {
             this.showNotify();
         }
@@ -112,7 +120,7 @@ function createShowQueue(initialRecallDelay = 500, recallDelayIncrement = 500) {
 export let notify = {
     show,
     hide,
-    createShowQueue
+    createShowQueue,
 };
 
 export default Container;
